@@ -16,7 +16,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import { NavLink } from "react-router-dom";
 
-import logo from "../../../public/images/logo.png";
+import logo from "../../assets/images/logo.png";
 
 const pages = [
   {
