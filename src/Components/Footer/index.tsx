@@ -26,10 +26,10 @@ const footerData = [
   {
     title: "Resources",
     links: [
-      { name: "Learning Guide", path: "/learning-guide" },
-      { name: "Career Advice", path: "/career-advice" },
-      { name: "Student Support", path: "/student-support" },
-      { name: "FAQ", path: "/faq" },
+      { name: "Learning Guide", path: "" },
+      { name: "Career Advice", path: "" },
+      { name: "Student Support", path: "" },
+      { name: "FAQ", path: "" },
     ],
   },
 ];
@@ -79,12 +79,9 @@ function Footer() {
         <Box
           sx={{
             display: "grid",
-
             gridTemplateColumns: {
               xs: "1fr 1fr",
-
               sm: "1fr 1fr",
-
               lg: "2fr 1fr 1fr 1.3fr",
             },
             gap: 6,
@@ -132,8 +129,6 @@ function Footer() {
                     key={index}
                     component="a"
                     href={social.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     sx={{
                       width: 46,
                       height: 46,
