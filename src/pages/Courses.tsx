@@ -1,41 +1,99 @@
 import Card from "@mui/material/Card";
-// import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-// import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import FullStack from "../../src/assets/images/full-stack.jpeg";
+import Box from "@mui/material/Box";
+import type { ReactElement } from "react";
 
-const courses = [
+import FullStack from "../../src/assets/images/full-stack.jpeg";
+import UIUX from "../../src/assets/images/ui-ux.jpeg";
+import Business from "../../src/assets/images/business.jpeg";
+import Marketing from "../../src/assets/images/marketing.jpeg";
+
+import { Styles } from "../Components/styles/Courses.styles";
+
+interface Course {
+  title: string;
+  image: string;
+  description: string;
+}
+
+const courses: Course[] = [
   {
     title: "Full Stack",
     image: FullStack,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio cumque ad consectetur omnis consequuntur beatae mollitia illum architecto quos nobis quo voluptatibus neque sapiente maiores debitis ratione, itaque modi quod.",
+      "Learn frontend, backend, databases, APIs, and modern web development technologies.",
+  },
+  {
+    title: "UI/UX",
+    image: UIUX,
+    description:
+      "Learn user research, wireframes, prototypes, and modern design principles.",
+  },
+  {
+    title: "Business",
+    image: Business,
+    description:
+      "Understand business strategy, management, and growth techniques.",
+  },
+  {
+    title: "Marketing",
+    image: Marketing,
+    description:
+      "Learn digital marketing, branding, SEO, and customer engagement.",
+  },
+  {
+    title: "Full Stack",
+    image: FullStack,
+    description:
+      "Learn frontend, backend, databases, APIs, and modern web development technologies.",
+  },
+  {
+    title: "UI/UX",
+    image: UIUX,
+    description:
+      "Learn user research, wireframes, prototypes, and modern design principles.",
+  },
+  {
+    title: "Business",
+    image: Business,
+    description:
+      "Understand business strategy, management, and growth techniques.",
+  },
+  {
+    title: "Marketing",
+    image: Marketing,
+    description:
+      "Learn digital marketing, branding, SEO, and customer engagement.",
   },
 ];
 
-export default function Courses() {
+export default function Courses(): ReactElement {
   return (
-    <>
-      {courses.map((course) => (
-        <Card key={course.title} sx={{ maxWidth: 345, m: 2 }}>
-          <CardMedia
-            component="img"
-            height="140"
-            image={course.image}
-            alt={course.title}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5">
-              {course.title}
+    <Box sx={Styles.container}>
+      {courses.map((Course) => (
+        <Card key={Course.title} sx={Styles.card}>
+          <Box>
+            <CardMedia
+              component="img"
+              image={Course.image}
+              alt={Course.title}
+              sx={Styles.image}
+            />
+          </Box>
+
+          <CardContent sx={Styles.content}>
+            <Typography variant="h5" sx={Styles.title}>
+              {Course.title}
             </Typography>
-            <Typography gutterBottom variant="h2">
-              {course.description}
+
+            <Typography variant="body2" sx={Styles.description}>
+              {Course.description}
             </Typography>
           </CardContent>
         </Card>
       ))}
-    </>
+    </Box>
   );
 }
