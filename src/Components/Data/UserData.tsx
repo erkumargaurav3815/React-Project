@@ -1,18 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { Button, Card, CardContent, Container } from "@mui/material";
 
 interface Address {
   street: string;
@@ -40,23 +28,25 @@ interface User {
 function UserData() {
   const [users, setUsers] = useState<User[]>([]);
   const [showTable, setShowTable] = useState<boolean>(false);
-  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
-  const showData = async (): Promise<void> => {
+  useEffect(() => {
+    const getUsers = async (): Promise<void> => {
+      try {
+        const response = await axios.get<User[]>(
+          "https://jsonplaceholder.typicode.com/users",
+        );
+
+        setUsers(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getUsers();
+  }, []);
+
+  const showData = (): void => {
     setShowTable(true);
-
-    if (dataLoaded) return;
-
-    try {
-      const response = await axios.get<User[]>(
-        "https://jsonplaceholder.typicode.com/users",
-      );
-
-      setUsers(response.data);
-      setDataLoaded(true);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const removeData = (): void => {
@@ -74,7 +64,7 @@ function UserData() {
       {showTable && (
         <Button
           variant="contained"
-          color="secondary"
+          color="inherit"
           onClick={removeData}
           sx={{ mb: 2 }}>
           Remove Data
@@ -82,68 +72,65 @@ function UserData() {
       )}
 
       {showTable && (
-        <Card>
-          <CardContent>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: "#212121" }}>
-                    {[
-                      "ID",
-                      "Name",
-                      "Username",
-                      "Email",
-                      "Phone",
-                      "Website",
-                      "Address",
-                      "Company",
-                    ].map((heading) => (
-                      <TableCell
-                        key={heading}
-                        align="center"
-                        sx={{
-                          color: "#fff",
-                          fontWeight: "bold",
-                        }}>
-                        {heading}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
+        <Container>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: "20px",
+            }}>
+            {users.map((user: User) => (
+              <Card
+                key={user.id}
+                sx={{
+                  aspectRatio: "1 / 1",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  textAlign: "left",
+                  padding: 3,
+                  boxShadow: 4,
+                  borderRadius: 3,
+                }}>
+                <CardContent>
+                  <h3>{user.name}</h3>
 
-                <TableBody>
-                  {users.map((user: User) => (
-                    <TableRow key={user.id}>
-                      <TableCell align="center">{user.id}</TableCell>
+                  <p>
+                    <strong>ID:</strong> {user.id}
+                  </p>
 
-                      <TableCell align="center">{user.name}</TableCell>
+                  <p>
+                    <strong>Username:</strong> {user.username}
+                  </p>
 
-                      <TableCell align="center">{user.username}</TableCell>
+                  <p>
+                    <strong>Email:</strong>{" "}
+                    <a href={`mailto:${user.email}`}>{user.email}</a>
+                  </p>
 
-                      <TableCell align="center">
-                        <a href={`mailto:${user.email}`}>{user.email}</a>
-                      </TableCell>
+                  <p>
+                    <strong>Phone:</strong> {user.phone}
+                  </p>
 
-                      <TableCell align="center">{user.phone}</TableCell>
+                  <p>
+                    <strong>Website:</strong> {user.website}
+                  </p>
 
-                      <TableCell align="center">{user.website}</TableCell>
+                  <p>
+                    <strong>Address:</strong> {user.address.street},{" "}
+                    {user.address.suite}, {user.address.city}
+                  </p>
 
-                      <TableCell align="center">
-                        {user.address.street}, {user.address.suite},
-                        {user.address.city}
-                      </TableCell>
+                  <p>
+                    <strong>Company:</strong> {user.company.name}
+                  </p>
 
-                      <TableCell align="center">
-                        {user.company.name}, {user.company.catchPhrase},
-                        {user.company.bs}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </CardContent>
-        </Card>
+                  <p>{user.company.catchPhrase}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </Container>
       )}
     </Container>
   );
