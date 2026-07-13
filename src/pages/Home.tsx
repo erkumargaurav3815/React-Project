@@ -1,15 +1,9 @@
 // import React from "react";
 
-import { Box } from "@mui/material";
-
+// import { Box } from "@mui/material";
+import UserData from "../Components/Data/UserData";
 function Home() {
-  return (
-    <Box
-      component="section"
-      sx={{ margin: 2, p: 2, border: "1px dashed grey" }}>
-      This Box renders as an HTML section element.
-    </Box>
-  );
+  return <UserData />;
 }
 
 export default Home;
