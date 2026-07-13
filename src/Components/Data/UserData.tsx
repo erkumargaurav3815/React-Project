@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Card, CardContent, Container } from "@mui/material";
-
+import { Button, Card, CardContent } from "@mui/material";
+import { Box } from "@mui/material";
 interface Address {
   street: string;
   suite: string;
@@ -54,7 +54,7 @@ function UserData() {
   };
 
   return (
-    <Container sx={{ mt: 2, textAlign: "center" }}>
+    <Box sx={{ mt: 2, textAlign: "center" }}>
       {!showTable && (
         <Button variant="contained" color="primary" onClick={showData}>
           View Data
@@ -72,67 +72,75 @@ function UserData() {
       )}
 
       {showTable && (
-        <Container>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "20px",
-            }}>
-            {users.map((user: User) => (
-              <Card
-                key={user.id}
-                sx={{
-                  aspectRatio: "1 / 1",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  textAlign: "left",
-                  padding: 3,
-                  boxShadow: 4,
-                  borderRadius: 3,
-                }}>
-                <CardContent>
-                  <h3>{user.name}</h3>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+              lg: "repeat(4, 1fr)",
+            },
+            gap: 3,
+            mt: 2,
+          }}>
+          {users.map((user) => (
+            <Card
+              key={user.id}
+              sx={{
+                background: "#e3e5f0",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                borderRadius: 3,
+                boxShadow: "6px 10px #e8dddd",
+                "&:hover": {
+                  transform: "scale(1.02)",
+                  boxShadow: "10px 14px #d8caca",
+                  cursor: "pointer",
+                },
+                // color: "white",
+              }}>
+              <CardContent>
+                <h3>{user.name}</h3>
 
-                  <p>
-                    <strong>ID:</strong> {user.id}
-                  </p>
+                <p>
+                  <strong>ID:</strong> {user.id}
+                </p>
 
-                  <p>
-                    <strong>Username:</strong> {user.username}
-                  </p>
+                <p>
+                  <strong>Username:</strong> {user.username}
+                </p>
 
-                  <p>
-                    <strong>Email:</strong>{" "}
-                    <a href={`mailto:${user.email}`}>{user.email}</a>
-                  </p>
+                <p>
+                  <strong>Email:</strong>{" "}
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                </p>
 
-                  <p>
-                    <strong>Phone:</strong> {user.phone}
-                  </p>
+                <p>
+                  <strong>Phone:</strong> {user.phone}
+                </p>
 
-                  <p>
-                    <strong>Website:</strong> {user.website}
-                  </p>
+                <p>
+                  <strong>Website:</strong> {user.website}
+                </p>
 
-                  <p>
-                    <strong>Address:</strong> {user.address.street},{" "}
-                    {user.address.suite}, {user.address.city}
-                  </p>
+                <p>
+                  <strong>Address:</strong> {user.address.street},{" "}
+                  {user.address.suite}, {user.address.city}
+                </p>
 
-                  <p>
-                    <strong>Company:</strong> {user.company.name}
-                  </p>
+                <p>
+                  <strong>Company:</strong> {user.company.name}
+                </p>
 
-                  <p>{user.company.catchPhrase}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Container>
+                <p>{user.company.catchPhrase}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
       )}
-    </Container>
+    </Box>
   );
 }
 
