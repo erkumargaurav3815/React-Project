@@ -7,7 +7,6 @@ import {
   Button,
   Typography,
   Box,
-  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +27,7 @@ const Login = () => {
     },
   ];
 
+  //later on setMessage should update to login message
   const [message, setMessage] = useState("");
 
   const [values, setValues] = useState({
@@ -76,7 +76,11 @@ const Login = () => {
 
     setErrors(newErrors);
 
-    return Object.values(newErrors).every((error) => error === "");
+    if (newErrors.email === "" && newErrors.password === "") {
+      return true;
+    }
+
+    return false;
   };
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
@@ -169,14 +173,6 @@ const Login = () => {
               Login
             </Button>
           </form>
-
-          {message && (
-            <Alert
-              severity={message === "Login successful" ? "success" : "error"}
-              sx={{ mt: 3 }}>
-              {message}
-            </Alert>
-          )}
         </CardContent>
       </Card>
     </Box>
