@@ -4,6 +4,7 @@ import Courses from "../pages/Courses";
 import Contact from "../pages/Contact";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
+import TimeSheet from "../pages/TimeSheet";
 import ProtectedRoute from "./ProtectedRoute";
 function RoutesComponent() {
   return (
@@ -30,6 +31,14 @@ function RoutesComponent() {
         element={
           <ProtectedRoute>
             <Contact />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/timeSheet"
+        element={
+          <ProtectedRoute>
+            <TimeSheet />
           </ProtectedRoute>
         }
       />
