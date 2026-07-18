@@ -20,6 +20,7 @@ const pages = [
   { name: "Home", path: "/home" },
   { name: "Courses", path: "/courses" },
   { name: "Contact", path: "/contact" },
+  { name: "Time Sheet", path: "/timeSheet" },
 ];
 
 const authPages = [
