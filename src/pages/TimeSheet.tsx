@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormModal from "../Components/FormModal";
 import TaskTable from "../Components/TaskTable";
-import type { Task } from "../types";
+import type { Task } from "../Components/types";
 import { Modal, Button } from "@mui/material";
 function TimeSheet() {
   const [tasks, setTasks] = useState<Task[]>(() => {
@@ -18,7 +18,7 @@ function TimeSheet() {
       ...prev,
       {
         ...task,
-        id: prev.length + 1, // 1,2,3...
+        id: prev.length + 1,
       },
     ]);
   };
@@ -154,14 +154,6 @@ function TimeSheet() {
 
             <Typography sx={{ mb: 1 }}>
               <b>Description:</b> {viewTask.description}
-            </Typography>
-
-            <Typography sx={{ mb: 1 }}>
-              <b>Start Time:</b> {viewTask.startTime}
-            </Typography>
-
-            <Typography sx={{ mb: 1 }}>
-              <b>End Time:</b> {viewTask.endTime}
             </Typography>
 
             <Typography sx={{ mb: 1 }}>

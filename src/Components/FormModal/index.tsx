@@ -59,6 +59,8 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
 
   const [endTime, setEndTime] = useState(getOneHourLater());
 
+  const [error, setError] = useState("");
+
   useEffect(() => {
     if (editTask) {
       setOpen(true);
@@ -83,6 +85,10 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
 
   const handleChange = (event: SelectChangeEvent) => {
     setProject(event.target.value);
+  };
+
+  const isAlphabetOnly = (value: string) => {
+    return /^[A-Za-z\s]+$/.test(value);
   };
 
   const calculateWorkingHours = (start: string, end: string) => {
@@ -188,7 +194,11 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
               fullWidth
               label="Project Name"
               value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              onChange={(e) => {
+                if (/^[A-Za-z\s]*$/.test(e.target.value)) {
+                  setProjectName(e.target.value);
+                }
+              }}
               sx={{ mb: 2 }}
             />
           ) : project === "learning" ? (
@@ -196,7 +206,11 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
               fullWidth
               label="Topic"
               value={topic}
-              onChange={(e) => setTopic(e.target.value)}
+              onChange={(e) => {
+                if (/^[A-Za-z\s]*$/.test(e.target.value)) {
+                  setTopic(e.target.value);
+                }
+              }}
               sx={{ mb: 2 }}
             />
           ) : null}
@@ -207,7 +221,11 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
             rows={4}
             label="Description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              if (/^[A-Za-z\s]*$/.test(e.target.value)) {
+                setDescription(e.target.value);
+              }
+            }}
             sx={{ mb: 2 }}
           />
 
@@ -225,6 +243,17 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
               }}
             />
           </LocalizationProvider>
+
+          {error && (
+            <Typography
+              color="error"
+              sx={{
+                textAlign: "center",
+                mb: 2,
+              }}>
+              {error}
+            </Typography>
+          )}
 
           <Box
             sx={{
@@ -261,12 +290,51 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
             <Button
               variant="contained"
               onClick={() => {
+                const taskName = project === "assignment" ? projectName : topic;
+
+                if (!project) {
+                  setError("Category is required");
+                  return;
+                }
+
+                if (!taskName.trim()) {
+                  setError("Topic/Project name is required");
+                  return;
+                }
+
+                if (!isAlphabetOnly(taskName)) {
+                  setError("Only alphabets are allowed in Topic/Project name");
+                  return;
+                }
+
+                if (!description.trim()) {
+                  setError("Description is required");
+                  return;
+                }
+
+                if (!isAlphabetOnly(description)) {
+                  setError("Only alphabets are allowed in Description");
+                  return;
+                }
+
+                if (!date) {
+                  setError("Date is required");
+                  return;
+                }
+
+                if (!startTime || !endTime) {
+                  setError("Start Time and End Time are required");
+                  return;
+                }
+
+                setError("");
+
                 const task: Task = {
                   id: editTask ? editTask.id : 0,
 
                   category: project,
 
-                  name: project === "assignment" ? projectName : topic,
+                  name: taskName,
 
                   description,
 
