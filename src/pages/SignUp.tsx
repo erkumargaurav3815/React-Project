@@ -11,10 +11,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import Link from "@mui/material/Link";
 
-const Login = () => {
+interface User {
+  email: string;
+  password: string;
+}
+
+const SignUp = () => {
   const navigate = useNavigate();
 
-  //later on setMessage should update to login message
+  //later on setMessage should update to signup message
   const [message, setMessage] = useState("");
 
   const [values, setValues] = useState({
@@ -70,26 +75,25 @@ const Login = () => {
     return false;
   };
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleSignUp = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!validate()) return;
 
-    const getCredentials = localStorage.getItem("user");
-    if (!getCredentials) {
-      setMessage("No User Found!");
-      return;
-    }
-    const user = JSON.parse(getCredentials);
-    if (user.email === values.email && user.password === values.password) {
-      setMessage("Login Sucessfull");
-      resetForm();
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
-    } else {
-      setMessage("Invalid Credentials");
-    }
+    const user: User = {
+      email: values.email,
+      password: values.password,
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+    setMessage("Sign up sucessfull");
+
+    resetForm();
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
   };
+
   return (
     <Box
       sx={{
@@ -109,10 +113,7 @@ const Login = () => {
         <CardContent>
           {" "}
           {message && (
-            <Typography
-              color={message === "Login Sucessfull" ? "success" : "error"}
-              align="center"
-              sx={{ mb: 2 }}>
+            <Typography color="success" align="center" sx={{ mb: 2 }}>
               {message}
             </Typography>
           )}
@@ -124,9 +125,9 @@ const Login = () => {
               fontWeight: "bold",
               fontFamily: "Segoe UI Emoji",
             }}>
-            Login
+            Sign Up
           </Typography>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSignUp}>
             <TextField
               fullWidth
               label="Email"
@@ -150,12 +151,14 @@ const Login = () => {
               error={!!errors.password}
               helperText={errors.password}
             />
+
             <Typography>
-              Don't have an account?{" "}
-              <Link href="/signup" sx={{ textDecoration: "none" }}>
-                Sign Up
+              Already have an account?{" "}
+              <Link href="/login" sx={{ textDecoration: "none" }}>
+                Login
               </Link>
             </Typography>
+
             <Button
               fullWidth
               type="submit"
@@ -166,7 +169,7 @@ const Login = () => {
                 borderRadius: 2,
                 background: "linear-gradient(135deg,#15105c,#2017bd,#52648c)",
               }}>
-              Login
+              Sign Up
             </Button>
           </form>
         </CardContent>
@@ -175,4 +178,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
