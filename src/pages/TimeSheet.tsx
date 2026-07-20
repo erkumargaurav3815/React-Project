@@ -13,11 +13,14 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 // import SearchBar from "../Components/TimeSheetSearchBar";
+import DeleteTaskAlert from "../Components/DeleteTaskAlert";
 
 function TimeSheet() {
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [viewTask, setViewTask] = useState<Task[]>([]);
-
+  //for Delete Alert using MUI
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   // get tasks from localStorage
   const [tasks, setTasks] = useState<Task[]>(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -64,10 +67,29 @@ function TimeSheet() {
 
   // delete
   const deleteTask = (id: number) => {
-    alert("Are you sure?");
-
-    console.log("Consent");
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+    // alert("Are you sure?");
+    // const deleteConsent = confirm("Are you sure");
+    // if (deleteConsent) {
+    // console.log("confirmed");
+    // setTasks((prev) => prev.filter((task) => task.id !== id));
+    // } else {
+    // console.log("rejected");
+    // }
+    // console.log("Consent");
+    // setTasks((prev) => prev.filter((task) => task.id !== id));
+    setSelectedTaskId(id);
+    setOpenDelete(true);
+  };
+  const handleDeleteConfirm = () => {
+    if (selectedTaskId !== null) {
+      setTasks((prev) => prev.filter((task) => task.id !== selectedTaskId));
+    }
+    setOpenDelete(false);
+    setSelectedTaskId(null);
+  };
+  const handleDeleteCancel = () => {
+    setOpenDelete(false);
+    setSelectedTaskId(null);
   };
 
   // view tasks of same date
@@ -211,6 +233,12 @@ function TimeSheet() {
           </Box>
         </Modal>
       )}
+
+      <DeleteTaskAlert
+        open={openDelete}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
     </Box>
   );
 }
