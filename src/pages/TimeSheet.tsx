@@ -14,6 +14,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchBar from "../Components/TimeSheetSearchBar";
 import DeleteTaskAlert from "../Components/DeleteTaskAlert";
+import { filterTasks } from "../Components/TimeSheetSearchBar/filterTasks";
 
 function TimeSheet() {
   const [editTask, setEditTask] = useState<Task | null>(null);
@@ -26,6 +27,9 @@ function TimeSheet() {
     const savedTasks = localStorage.getItem("tasks");
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
+  //search tasks
+  const [search, setSearch] = useState("");
+  const filteredTasks = filterTasks(tasks, search);
 
   // save tasks
   useEffect(() => {
@@ -105,7 +109,7 @@ function TimeSheet() {
   // group tasks by date for viewing
   const groupedTasks: Record<string, Task[]> = {};
 
-  for (const task of tasks) {
+  for (const task of filteredTasks) {
     if (!groupedTasks[task.date]) {
       groupedTasks[task.date] = [];
     }
@@ -136,7 +140,7 @@ function TimeSheet() {
 
       {/* Search bar starts */}
       <Box sx={{ display: "flex", justifyContent: "center", m: 2 }}>
-        <SearchBar />
+        <SearchBar value={search} onChange={setSearch} />
       </Box>
       {/* Search bar ends */}
 

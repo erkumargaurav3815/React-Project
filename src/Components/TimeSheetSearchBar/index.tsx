@@ -1,7 +1,13 @@
-// import React from "react";
+//code for search i/p (only frontend)
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-function SearchBar() {
+
+interface Props {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function SearchBar({ value, onChange }: Props) {
   return (
     <>
       <Box
@@ -9,7 +15,12 @@ function SearchBar() {
         sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
         noValidate
         autoComplete="off">
-        <TextField id="outlined-basic" label="Search " variant="outlined" />
+        <TextField
+          label="Search Tasks"
+          variant="outlined"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
       </Box>
     </>
   );
