@@ -176,7 +176,7 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
           {project === "assignment" ? (
             <TextField
               fullWidth
-              label="Project Name"
+              label="Project"
               value={projectName}
               onChange={(e) => {
                 if (/^[A-Za-z\s]*$/.test(e.target.value)) {
@@ -276,8 +276,18 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
               onClick={() => {
                 const taskName = project === "assignment" ? projectName : topic;
 
+                if (project.trim().length < 5) {
+                  setError("Project should have a minimum of 5 characters.");
+                  return;
+                }
+
                 if (!project) {
                   setError("Category is required");
+                  return;
+                }
+
+                if (taskName.trim().length < 5) {
+                  setError("Topic should have a minimum of 5 characters.");
                   return;
                 }
 
@@ -291,6 +301,13 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
                   return;
                 }
 
+                if (description.trim().length < 20) {
+                  setError(
+                    "Description should have a minimum of 20 characters.",
+                  );
+                  return;
+                }
+                console.log("here");
                 if (!description.trim()) {
                   setError("Description is required");
                   return;
