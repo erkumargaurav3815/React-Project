@@ -12,6 +12,7 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import SearchBar from "../Components/TimeSheetSearchBar";
 
 function TimeSheet() {
   const [editTask, setEditTask] = useState<Task | null>(null);
@@ -63,6 +64,9 @@ function TimeSheet() {
 
   // delete
   const deleteTask = (id: number) => {
+    alert("Are you sure?");
+
+    console.log("Consent");
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 

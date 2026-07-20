@@ -7,14 +7,14 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip,
+  // Chip,
   IconButton,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+// import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import type { Task } from "../types";
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
 
 function TaskTable({
   tasks,
-  completeTask,
+  // completeTask,
   handleEdit,
   deleteTask,
   handleView,
@@ -58,7 +58,7 @@ function TaskTable({
 
             <TableCell>Time Taken</TableCell>
 
-            <TableCell>Status</TableCell>
+            {/* <TableCell>Status</TableCell> */}
 
             <TableCell align="center">Actions</TableCell>
           </TableRow>
@@ -97,12 +97,12 @@ function TaskTable({
 
               <TableCell>{task.timeTaken}</TableCell>
 
-              <TableCell>
+              {/* <TableCell>
                 <Chip
                   label={task.status}
                   color={task.status === "Completed" ? "success" : "warning"}
                 />
-              </TableCell>
+              </TableCell> */}
 
               <TableCell align="center">
                 <Box
@@ -110,12 +110,12 @@ function TaskTable({
                     display: "flex",
                     justifyContent: "center",
                   }}>
-                  <IconButton
+                  {/* <IconButton
                     color="success"
                     onClick={() => completeTask(task.id)}
                     disabled={task.status === "Completed"}>
                     <CheckCircleIcon />
-                  </IconButton>
+                  </IconButton> */}
 
                   <IconButton color="primary" onClick={() => handleEdit(task)}>
                     <EditIcon />
