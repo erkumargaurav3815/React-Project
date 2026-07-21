@@ -238,7 +238,8 @@ function TimeSheet() {
                 </AccordionSummary>
 
                 <AccordionDetails>
-                  <Box display="flex" flexDirection="column" gap={2}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     <Typography>
                       <strong>Category:</strong> {task.category}
                     </Typography>
@@ -250,7 +251,6 @@ function TimeSheet() {
                         overflowWrap: "anywhere",
                       }}>
                       <strong>Description:</strong>
-                      <br />
                       {task.description}
                     </Typography>
 
