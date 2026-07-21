@@ -16,6 +16,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
+import { useTaskForm } from "../hooks/useTaskForm";
+import { useTime } from "../hooks/useTime";
+import { useValidation } from "../hooks/useValidation";
+
 interface Props {
   addTask: (task: Task) => void;
   editTask: Task | null;
@@ -24,64 +28,30 @@ interface Props {
 
 function FormModal({ addTask, editTask, updateTask }: Props) {
   const [open, setOpen] = useState(false);
-  const [project, setProject] = useState("");
-  const [projectName, setProjectName] = useState("");
-  const [topic, setTopic] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [errors, setErrors] = useState({
-    project: "",
-    taskName: "",
-    description: "",
-    date: "",
-    time: "",
-  });
+  const {
+    project,
+    setProject,
+    projectName,
+    setProjectName,
+    topic,
+    setTopic,
+    description,
+    setDescription,
+    date,
+    setDate,
+    resetForm,
+  } = useTaskForm();
 
-  //get the current time
-  function getCurrentTime() {
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-    const currentMinute = currentDate.getMinutes();
-    // Add 0 before single digit values (for own convienience hours & minutes should always be of 2 digits)
-    const hour = String(currentHour).padStart(2, "0");
-    const minute = String(currentMinute).padStart(2, "0");
-    // console.log("current time: ", hour, minute);
-    return `${hour}:${minute}`;
-  }
+  const {
+    startTime,
+    endTime,
+    setStartTime,
+    setEndTime,
+    calculateDuration,
+    resetTime,
+  } = useTime();
 
-  // get time after one hour automatically take +1 hour in end time i/p (to improve the ui)
-  function getNextHourTime() {
-    const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 1);
-    const hour = String(currentDate.getHours()).padStart(2, "0");
-    const minute = String(currentDate.getMinutes()).padStart(2, "0");
-    // console.log("one hour later: ", hour, minute);
-    return `${hour}:${minute}`;
-  }
-
-  // calculate total working time
-  function calculateDuration(startTime: string, endTime: string) {
-    // Split time into hours and minutes
-    const [startHour, startMinute] = startTime.split(":").map(Number);
-    const [endHour, endMinute] = endTime.split(":").map(Number);
-    // Convert everything into minutes
-    const startTotalMinutes = startHour * 60 + startMinute;
-    let endTotalMinutes = endHour * 60 + endMinute;
-    // If end time is smaller , it means it took more than 24hour
-    if (endTotalMinutes < startTotalMinutes) {
-      endTotalMinutes += 24 * 60;
-    }
-    // Find difference
-    const totalMinutes = endTotalMinutes - startTotalMinutes;
-    // Convert minutes into hours and minutes
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    // console.log(hours, minutes);
-    return `${hours}h ${minutes}m`;
-  }
-
-  const [startTime, setStartTime] = useState(getCurrentTime());
-  const [endTime, setEndTime] = useState(getNextHourTime());
+  const { errors, validate } = useValidation();
 
   const capitalizeFirstLetter = (value: string) => {
     return value.charAt(0).toUpperCase() + value.slice(1);
@@ -92,7 +62,7 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
       setOpen(true);
       const category = editTask.category.toLowerCase();
       setProject(category);
-      if (editTask.category === "assignment") {
+      if (category === "assignment") {
         setProjectName(editTask.name);
       } else {
         setTopic(editTask.name);
@@ -102,64 +72,35 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
       setStartTime(editTask.startTime);
       setEndTime(editTask.endTime);
     }
-  }, [editTask]);
+  }, [
+    editTask,
+    setProject,
+    setProjectName,
+    setTopic,
+    setDescription,
+    setDate,
+    setStartTime,
+    setEndTime,
+  ]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setProject(event.target.value);
   };
 
-  const isAlphabetOnly = (value: string) => {
-    return /^[A-Za-z\s]+$/.test(value);
-  };
-
-  //form modal validation
-  const validate = () => {
-    const newErrors = {
-      project: "",
-      taskName: "",
-      description: "",
-      date: "",
-      time: "",
-    };
-
-    // if project=assignment then taskName=projectName else taskName=topic
-    const taskName = project === "assignment" ? projectName : topic;
-
-    if (!project) {
-      newErrors.project = "Category is required";
-    }
-
-    if (!taskName.trim()) {
-      newErrors.taskName = "Topic/Project name is required";
-    } else if (taskName.trim().length < 5) {
-      newErrors.taskName = "Minimum 5 characters required";
-    } else if (!isAlphabetOnly(taskName)) {
-      newErrors.taskName = "Only alphabets are allowed";
-    }
-
-    if (!description.trim()) {
-      newErrors.description = "Description is required";
-    } else if (description.trim().length < 20) {
-      newErrors.description = "Minimum 20 characters required";
-    }
-
-    if (!date) {
-      newErrors.date = "Date is required";
-    }
-
-    if (!startTime || !endTime) {
-      newErrors.time = "Start Time and End Time are required";
-    }
-
-    setErrors(newErrors);
-
-    //get all values from newErrors object and return true if all errors are empty else false
-    return Object.values(newErrors).every((err) => err === "");
-  };
-
   //add or update task button function
   const addUpdateButton = () => {
-    if (!validate()) return;
+    if (
+      !validate(
+        project,
+        projectName,
+        topic,
+        description,
+        date,
+        startTime,
+        endTime,
+      )
+    )
+      return;
 
     const taskName = project === "assignment" ? projectName : topic;
 
@@ -172,7 +113,6 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
       startTime,
       endTime,
       timeTaken: calculateDuration(startTime, endTime),
-      // status: editTask ? editTask.status : "Pending",
     };
 
     if (editTask) {
@@ -184,19 +124,10 @@ function FormModal({ addTask, editTask, updateTask }: Props) {
     handleClose();
   };
 
-  const resetForm = () => {
-    setProject("");
-    setProjectName("");
-    setTopic("");
-    setDescription("");
-    setDate("");
-    setStartTime(getCurrentTime());
-    setEndTime(getNextHourTime());
-  };
-
   const handleClose = () => {
     setOpen(false);
     resetForm();
+    resetTime();
   };
 
   return (
