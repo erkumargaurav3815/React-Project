@@ -37,7 +37,6 @@ function TimeSheet() {
   });
   //search tasks
   const [search, setSearch] = useState("");
-  //search tasks matching with search and store in filteredTasks
   const filteredTasks = filterTasks(tasks, search);
 
   // save tasks
